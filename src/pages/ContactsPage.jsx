@@ -1,4 +1,4 @@
-import { json, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import ContactItem from "../components/ContactItem";
@@ -15,7 +15,7 @@ function ContactsPage() {
   const favoriteHandler = (id) => {
     const targetContact = contacts.find((contact) => contact.id === id);
     targetContact.favorite = !targetContact.favorite;
-    setContacts((contact) => [...contact]);
+    setContacts((contacts) => [...contacts]);
   };
 
   const deleteHandler = (id) => {

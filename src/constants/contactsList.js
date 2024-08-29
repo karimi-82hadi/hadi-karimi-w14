@@ -1,4 +1,3 @@
-const data = localStorage.getItem("contactsList");
-const contactsList = JSON.parse(data) || [];
+const contactsList = JSON.parse(localStorage.getItem("contactsList")) || [];
 
 export default contactsList;

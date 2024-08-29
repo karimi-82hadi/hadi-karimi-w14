@@ -1,7 +1,11 @@
+import ContactForm from "../components/ContactForm";
+
 function NewContactPage() {
   return (
-    <div>NewContactPage</div>
-  )
+    <div>
+      <ContactForm />
+    </div>
+  );
 }
 
-export default NewContactPage
+export default NewContactPage;
