@@ -1,4 +1,4 @@
-.contactContainer {
+.contactsContainer {
   width: 100%;
   max-width: 1140px;
   margin: 0 auto;
@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 250px;
+  min-height: 56px;
 }
 
 .addContactBtn {

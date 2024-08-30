@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { v4 } from "uuid";
 
 import contactsList from "../constants/contactsList";
+import { saveToLocalStorage } from "../helpers/helper";
 
 import avatarImg from "../assets/img/contact.png";
 
@@ -22,10 +23,12 @@ function ContactForm() {
     id: "",
     name: "",
     lastName: "",
+    fullName: "",
     email: "",
     phoneNumber: "",
     avatar: contactAvatar,
     favorite: false,
+    checked: false,
   });
 
   const changeHandler = (e) => {
@@ -51,15 +54,22 @@ function ContactForm() {
     if (!contact.email) {
       return toast.error("لطفا ایمیل خود را وارد نمایید");
     }
-    if (!contact.phoneNumber || !/^09[0-9]{9}/.test(contact.phoneNumber)) {
+    if (!/^09[0-9]{9}/.test(contact.phoneNumber)) {
       return toast.error("لطفا شماره تلفن همراه خود را به درستی وارد نمایید");
     }
 
-    const newContact = { ...contact, id: v4(), avatar: contactAvatar };
+    const newContact = {
+      ...contact,
+      id: v4(),
+      avatar: contactAvatar,
+      fullName: contact.name + " " + contact.lastName,
+    };
     setContacts((contacts) => [...contacts, newContact]);
+    saveToLocalStorage([...contacts, newContact]);
     setContact({
       name: "",
       lastName: "",
+      fullName: "",
       email: "",
       phoneNumber: "",
       avatar: "",
@@ -67,12 +77,13 @@ function ContactForm() {
     toast.success("مخاطب با موفقیت ذخیره شد.");
     setTimeout(() => {
       navigate("/contacts");
-    }, 5000);
+    }, 3000);
   };
 
   useEffect(() => {
-    localStorage.setItem("contactsList", JSON.stringify(contacts));
-  }, [contacts]);
+    const newContact = JSON.parse(localStorage.getItem("contactsList")) || [];
+    setContacts(newContact);
+  }, []);
 
   return (
     <>
@@ -88,7 +99,11 @@ function ContactForm() {
             />
             <img src={contactAvatar} />
             <button>
-              {contactAvatar === avatarImg ? <IoAddOutline /> : <MdOutlineEdit />}
+              {contactAvatar === avatarImg ? (
+                <IoAddOutline />
+              ) : (
+                <MdOutlineEdit />
+              )}
             </button>
           </label>
         </div>
@@ -160,7 +175,7 @@ function ContactForm() {
           </div>
         </div>
       </form>
-      <ToastContainer rtl={true} />
+      <ToastContainer rtl={true} autoClose={2000} pauseOnFocusLoss={false} />
     </>
   );
 }

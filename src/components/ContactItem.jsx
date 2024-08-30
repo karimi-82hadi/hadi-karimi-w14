@@ -8,10 +8,11 @@ import styles from "./ContactItem.module.css";
 import { useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-function ContactItem({ data, favoriteHandler, deleteHandler }) {
-  const { id, name, lastName, email, phoneNumber, avatar, favorite } = data;
-  const navigate = useNavigate();
+function ContactItem({ data, favoriteHandler, deleteHandler, checkedHandler }) {
+  const { id, fullName, email, phoneNumber, avatar, favorite, checked } = data;
   const [showOption, setShowOption] = useState(false);
+  const [isChecked, setIsChecked] = useState(checked);
+  const navigate = useNavigate();
 
   const openPageContact = () => {
     navigate(`/contacts/${id}`);
@@ -22,15 +23,25 @@ function ContactItem({ data, favoriteHandler, deleteHandler }) {
   };
 
   return (
-    <div className={styles.ContactItem} onClick={openPageContact}>
+    <div
+      className={`${styles.ContactItem} ${isChecked ? styles.checked : ""}`}
+      onClick={openPageContact}
+    >
       <div className={styles.ContactAvatar}>
         <img src={avatar ? avatar : avatarImg} />
+        <input
+          type="checkbox"
+          checked={isChecked}
+          onClick={(e) => {
+            e.stopPropagation();
+            checkedHandler(id);
+          }}
+          onChange={() => setIsChecked((isChecked) => !isChecked)}
+        />
       </div>
       <div className={styles.ContactInfo}>
         <div>
-          <span>
-            {name} {lastName}
-          </span>
+          <span>{fullName}</span>
         </div>
         <div>
           <span>{email}</span>

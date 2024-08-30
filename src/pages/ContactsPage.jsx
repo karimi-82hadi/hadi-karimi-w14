@@ -1,12 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
-import ContactItem from "../components/ContactItem";
-import contactsList from "../constants/contactsList";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { IoAddOutline } from "react-icons/io5";
 
+import ContactItem from "../components/ContactItem";
+import ContactsHeader from "../components/ContactsHeader";
+
+import contactsList from "../constants/contactsList";
+import { saveToLocalStorage } from "../helpers/helper";
+
 import styles from "./ContactsPage.module.css";
+import FavoriteContacts from "../components/FavoriteContacts";
 
 function ContactsPage() {
   const [contacts, setContacts] = useState(contactsList);
@@ -16,35 +21,66 @@ function ContactsPage() {
     const targetContact = contacts.find((contact) => contact.id === id);
     targetContact.favorite = !targetContact.favorite;
     setContacts((contacts) => [...contacts]);
+    saveToLocalStorage(contacts);
+    targetContact.favorite
+      ? toast.success("مخاطب به لیست علاقه مندی اضافه شد.")
+      : toast.success("مخاطب از لیست علاقه مندی حذف شد.");
   };
 
   const deleteHandler = (id) => {
     const newContacts = contacts.filter((contact) => contact.id !== id);
     setContacts(newContacts);
+    saveToLocalStorage(newContacts);
+    toast.success("مخاطب با موفقیت حذف شد.");
+  };
+
+  const checkedHandler = (id) => {
+    const targetContact = contacts.find((contact) => contact.id === id);
+    targetContact.checked = !targetContact.checked;
+    setContacts((contacts) => [...contacts]);
+    saveToLocalStorage(contacts);
   };
 
   useEffect(() => {
-    localStorage.setItem("contactsList", JSON.stringify(contacts));
-  }, [contacts]);
+    const newContact = JSON.parse(localStorage.getItem("contactsList")) || [];
+    setContacts(newContact);
+  }, []);
 
   return (
     <>
-      <div className={styles.contactContainer}>
+      <div className={styles.contactsContainer}>
+        <ContactsHeader contacts={contacts} />
         {!contacts.length ? (
           <div className={styles.noContact}>
             <span>هیچ مخاطبی یافت نشد</span>
           </div>
         ) : (
-          <div>
-            {contacts.map((contact) => (
-              <ContactItem
-                key={contact.id}
-                data={contact}
-                favoriteHandler={favoriteHandler}
-                deleteHandler={deleteHandler}
-              />
-            ))}
-          </div>
+          <>
+            <FavoriteContacts
+              contacts={contacts}
+              favoriteHandler={favoriteHandler}
+              deleteHandler={deleteHandler}
+              checkedHandler={checkedHandler}
+            />
+            <div style={{ marginBottom: "10px" }}>
+              <div style={{ marginBottom: "10px" }}>
+                <h3 style={{ fontSize: "16px" }}>
+                  مخاطبین ({contacts.length})
+                </h3>
+              </div>
+              <div>
+                {contacts.map((contact) => (
+                  <ContactItem
+                    key={contact.id}
+                    data={contact}
+                    favoriteHandler={favoriteHandler}
+                    deleteHandler={deleteHandler}
+                    checkedHandler={checkedHandler}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
         )}
       </div>
       <div className={styles.addContactBtn}>
@@ -57,6 +93,7 @@ function ContactsPage() {
           <span>ایجاد مخاطب جدید</span>
         </button>
       </div>
+      <ToastContainer rtl={true} autoClose={2000} pauseOnFocusLoss={false} />
     </>
   );
 }
