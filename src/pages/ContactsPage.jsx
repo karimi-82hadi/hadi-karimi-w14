@@ -1,17 +1,17 @@
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoAddOutline } from "react-icons/io5";
 
 import ContactItem from "../components/ContactItem";
 import ContactsHeader from "../components/ContactsHeader";
+import FavoriteContacts from "../components/FavoriteContacts";
 
 import contactsList from "../constants/contactsList";
 import { saveToLocalStorage } from "../helpers/helper";
 
 import styles from "./ContactsPage.module.css";
-import FavoriteContacts from "../components/FavoriteContacts";
 
 function ContactsPage() {
   const [contacts, setContacts] = useState(contactsList);
@@ -38,7 +38,6 @@ function ContactsPage() {
     const targetContact = contacts.find((contact) => contact.id === id);
     targetContact.checked = !targetContact.checked;
     setContacts((contacts) => [...contacts]);
-    saveToLocalStorage(contacts);
   };
 
   useEffect(() => {
@@ -49,7 +48,7 @@ function ContactsPage() {
   return (
     <>
       <div className={styles.contactsContainer}>
-        <ContactsHeader contacts={contacts} />
+        <ContactsHeader contacts={contacts} setContacts={setContacts} />
         {!contacts.length ? (
           <div className={styles.noContact}>
             <span>هیچ مخاطبی یافت نشد</span>

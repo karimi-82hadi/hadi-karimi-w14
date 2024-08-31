@@ -1,17 +1,17 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { MdFavorite, MdFavoriteBorder, MdOutlineEdit } from "react-icons/md";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import { HiDotsVertical } from "react-icons/hi";
+
 import avatarImg from "../assets/img/contact.png";
 
 import styles from "./ContactItem.module.css";
-import { useState } from "react";
-import { RiDeleteBin6Line } from "react-icons/ri";
 
 function ContactItem({ data, favoriteHandler, deleteHandler, checkedHandler }) {
-  const { id, fullName, email, phoneNumber, avatar, favorite, checked } = data;
+  const { id, fullName, email, phoneNumber, avatar, favorite } = data;
   const [showOption, setShowOption] = useState(false);
-  const [isChecked, setIsChecked] = useState(checked);
+  const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
 
   const openPageContact = () => {
@@ -36,7 +36,7 @@ function ContactItem({ data, favoriteHandler, deleteHandler, checkedHandler }) {
             e.stopPropagation();
             checkedHandler(id);
           }}
-          onChange={() => setIsChecked((isChecked) => !isChecked)}
+          onChange={() => setIsChecked(!isChecked)}
         />
       </div>
       <div className={styles.ContactInfo}>
