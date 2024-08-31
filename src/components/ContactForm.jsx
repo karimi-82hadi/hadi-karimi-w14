@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { v4 } from "uuid";
 
 import contactsList from "../constants/contactsList";
@@ -15,11 +14,12 @@ import { MdOutlineEdit, MdOutlineMail } from "react-icons/md";
 
 import styles from "./ContactForm.module.css";
 
-function ContactForm() {
-  const navigate = useNavigate();
+function ContactForm({ isEdit, data }) {
   const [contacts, setContacts] = useState(contactsList);
-  const [contactAvatar, setContactAvatar] = useState(avatarImg);
-  const [contact, setContact] = useState({
+  const [contactAvatar, setContactAvatar] = useState(
+    data ? data.avatar : avatarImg
+  );
+  const initialData = {
     id: "",
     name: "",
     lastName: "",
@@ -29,7 +29,9 @@ function ContactForm() {
     avatar: contactAvatar,
     favorite: false,
     checked: false,
-  });
+  };
+  const [contact, setContact] = useState(isEdit ? data : initialData);
+  const navigate = useNavigate();
 
   const changeHandler = (e) => {
     const name = e.target.name;
@@ -40,6 +42,9 @@ function ContactForm() {
 
   const fileHandler = (e) => {
     setContactAvatar(window.URL.createObjectURL(e.target.files[0]));
+    if (isEdit) {
+      contact.avatar = contactAvatar;
+    }
   };
 
   const addHandler = (e) => {
@@ -58,26 +63,40 @@ function ContactForm() {
       return toast.error("لطفا شماره تلفن همراه خود را به درستی وارد نمایید");
     }
 
-    const newContact = {
-      ...contact,
-      id: v4(),
-      avatar: contactAvatar,
-      fullName: contact.name + " " + contact.lastName,
-    };
-    setContacts((contacts) => [...contacts, newContact]);
-    saveToLocalStorage([...contacts, newContact]);
-    setContact({
-      name: "",
-      lastName: "",
-      fullName: "",
-      email: "",
-      phoneNumber: "",
-      avatar: "",
-    });
-    toast.success("مخاطب با موفقیت ذخیره شد.");
-    setTimeout(() => {
-      navigate("/contacts");
-    }, 3000);
+    if (isEdit) {
+      const updatedContact = {
+        ...contact,
+        avatar: contactAvatar,
+        fullName: contact.name + " " + contact.lastName,
+      };
+      const unUpdatedContacts = contacts.filter(
+        (contact) => contact.id !== updatedContact.id
+      );
+      const newContacts = [...unUpdatedContacts, updatedContact];
+      setContacts(newContacts);
+      saveToLocalStorage(newContacts);
+    } else {
+      const newContact = {
+        ...contact,
+        id: v4(),
+        avatar: contactAvatar,
+        fullName: contact.name + " " + contact.lastName,
+      };
+      setContacts((contacts) => [...contacts, newContact]);
+      saveToLocalStorage([...contacts, newContact]);
+    }
+
+    if (isEdit) {
+      toast.success("مخاطب با موفقیت ذخیره شد.");
+      setTimeout(() => {
+        navigate(`/contacts/${data.id}`);
+      }, 3000);
+    } else {
+      toast.success("مخاطب با موفقیت افزوده شد.");
+      setTimeout(() => {
+        navigate("/contacts");
+      }, 3000);
+    }
   };
 
   useEffect(() => {
@@ -171,11 +190,10 @@ function ContactForm() {
             </div>
           </div>
           <div className={styles.submitBtnContainer}>
-            <button type="submit">ذخیره</button>
+            <button type="submit">{isEdit ? "ذخیره" : "افزودن"}</button>
           </div>
         </div>
       </form>
-      <ToastContainer rtl={true} autoClose={2000} pauseOnFocusLoss={false} />
     </>
   );
 }

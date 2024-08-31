@@ -63,7 +63,12 @@ function ContactItem({ data, favoriteHandler, deleteHandler, checkedHandler }) {
             <MdFavoriteBorder />
           )}
         </button>
-        <button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/contacts/${id}?edit=1`);
+          }}
+        >
           <MdOutlineEdit />
         </button>
         <div>
