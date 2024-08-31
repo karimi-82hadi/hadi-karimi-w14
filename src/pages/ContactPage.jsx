@@ -59,7 +59,7 @@ function ContactPage() {
   if (!contact)
     return (
       <div style={{ textAlign: "center", padding: "80px 0" }}>
-        <h1 style={{ fontSize: "24px" }}>در حال بارگذاری...</h1>
+        <h2 style={{ fontSize: "24px" }}>در حال بارگذاری...</h2>
       </div>
     );
 
@@ -89,11 +89,11 @@ function ContactPage() {
               <img src={contact.avatar} />
             </div>
             <div>
-              <h1>{contact.fullName}</h1>
+              <h2>{contact.fullName}</h2>
             </div>
           </div>
           <div className={styles.contactDetails}>
-            <h2>اطلاعات مخاطب</h2>
+            <h3>اطلاعات مخاطب</h3>
             <ul>
               <li>
                 <span>
