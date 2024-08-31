@@ -41,8 +41,8 @@ function ContactsPage() {
   };
 
   useEffect(() => {
-    const newContact = JSON.parse(localStorage.getItem("contactsList")) || [];
-    setContacts(newContact);
+    const newContacts = JSON.parse(localStorage.getItem("contactsList")) || [];
+    setContacts(newContacts);
   }, []);
 
   return (
