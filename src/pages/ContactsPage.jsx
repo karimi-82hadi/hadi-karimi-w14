@@ -15,6 +15,7 @@ import styles from "./ContactsPage.module.css";
 
 function ContactsPage() {
   const [contacts, setContacts] = useState(contactsList);
+  const [checkedAll, setCheckedAll] = useState(false);
   const navigate = useNavigate();
 
   const favoriteHandler = (id) => {
@@ -48,7 +49,11 @@ function ContactsPage() {
   return (
     <>
       <div className={styles.contactsContainer}>
-        <ContactsHeader contacts={contacts} setContacts={setContacts} />
+        <ContactsHeader
+          contacts={contacts}
+          setContacts={setContacts}
+          setCheckedAll={setCheckedAll}
+        />
         {!contacts.length ? (
           <div className={styles.noContact}>
             <span>هیچ مخاطبی یافت نشد</span>
@@ -75,6 +80,7 @@ function ContactsPage() {
                     favoriteHandler={favoriteHandler}
                     deleteHandler={deleteHandler}
                     checkedHandler={checkedHandler}
+                    checkedAll={checkedAll}
                   />
                 ))}
               </div>

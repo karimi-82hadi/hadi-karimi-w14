@@ -31,7 +31,7 @@
   object-fit: cover;
 }
 
-.ContactItem:hover img,
+.ContactItem:not(.notHover):hover img,
 .ContactItem.checked img {
   opacity: 0;
 }
@@ -46,7 +46,7 @@
   cursor: pointer;
 }
 
-.ContactItem:hover input,
+.ContactItem:not(.notHover):hover input,
 .ContactItem.checked input {
   opacity: 1;
 }

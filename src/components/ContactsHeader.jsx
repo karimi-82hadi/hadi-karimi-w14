@@ -1,6 +1,8 @@
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { IoMdDoneAll } from "react-icons/io";
+import { MdIndeterminateCheckBox } from "react-icons/md";
 
 import ContactsSearch from "./ContactsSearch";
 
@@ -8,10 +10,22 @@ import { saveToLocalStorage } from "../helpers/helper";
 
 import styles from "./ContactsHeader.module.css";
 
-function ContactsHeader({ contacts, setContacts }) {
+function ContactsHeader({ contacts, setContacts, setCheckedAll }) {
   const checkedContacts = contacts.filter(
     (contact) => contact.checked === true
   );
+
+  const selectHandler = () => {
+    contacts.map((contact) => (contact.checked = true));
+    setContacts((contacts) => [...contacts]);
+    setCheckedAll(true);
+  };
+
+  const unSelectHandler = () => {
+    contacts.map((contact) => (contact.checked = false));
+    setContacts((contacts) => [...contacts]);
+    setCheckedAll(false);
+  };
 
   const deleteHandler = () => {
     const newContacts = contacts.filter((contact) => contact.checked === false);
@@ -29,6 +43,12 @@ function ContactsHeader({ contacts, setContacts }) {
             <div className={styles.contactsHeaderAction}>
               <span>{checkedContacts.length} انتخاب شده</span>
               <div>
+                <button onClick={unSelectHandler}>
+                  <MdIndeterminateCheckBox />
+                </button>
+                <button onClick={selectHandler}>
+                  <IoMdDoneAll />
+                </button>
                 <button onClick={deleteHandler}>
                   <RiDeleteBin6Line />
                 </button>

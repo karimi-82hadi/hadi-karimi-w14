@@ -27,6 +27,7 @@ function FavoriteContacts({
             favoriteHandler={favoriteHandler}
             deleteHandler={deleteHandler}
             checkedHandler={checkedHandler}
+            notHover={true}
           />
         ))}
       </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MdFavorite, MdFavoriteBorder, MdOutlineEdit } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -8,7 +8,14 @@ import avatarImg from "../assets/img/contact.png";
 
 import styles from "./ContactItem.module.css";
 
-function ContactItem({ data, favoriteHandler, deleteHandler, checkedHandler }) {
+function ContactItem({
+  data,
+  favoriteHandler,
+  deleteHandler,
+  checkedHandler,
+  checkedAll,
+  notHover,
+}) {
   const { id, fullName, email, phoneNumber, avatar, favorite } = data;
   const [showOption, setShowOption] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -22,11 +29,22 @@ function ContactItem({ data, favoriteHandler, deleteHandler, checkedHandler }) {
     setShowOption((option) => (option = !option));
   };
 
+  const contactClassHandler = () => {
+    if (isChecked) {
+      return `${styles.ContactItem} ${styles.checked}`;
+    }
+    if (notHover) {
+      return `${styles.ContactItem} ${styles.notHover}`;
+    }
+    return `${styles.ContactItem}`;
+  };
+
+  useEffect(() => {
+    setIsChecked(checkedAll || false);
+  }, [checkedAll]);
+
   return (
-    <div
-      className={`${styles.ContactItem} ${isChecked ? styles.checked : ""}`}
-      onClick={openPageContact}
-    >
+    <div className={contactClassHandler()} onClick={openPageContact}>
       <div className={styles.ContactAvatar}>
         <img src={avatar ? avatar : avatarImg} />
         <input
