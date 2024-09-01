@@ -6,16 +6,15 @@
 }
 
 .noContact {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 56px;
+  min-height: calc(100vh - 446px);
+  text-align: center;
 }
 
 .addContactBtn {
   position: fixed;
   bottom: 30px;
   right: 30px;
+  z-index: 1;
 }
 
 .addContactBtn button {

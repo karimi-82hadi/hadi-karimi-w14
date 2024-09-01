@@ -15,8 +15,10 @@ import {
 } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { FiArrowRight } from "react-icons/fi";
 
 import ContactForm from "../components/ContactForm";
+import Loader from "../components/Loader";
 
 import contactsList from "../constants/contactsList";
 import { saveToLocalStorage } from "../helpers/helper";
@@ -56,17 +58,20 @@ function ContactPage() {
     setContacts(newContacts);
   }, [searchParams]);
 
-  if (!contact)
-    return (
-      <div style={{ textAlign: "center", padding: "80px 0" }}>
-        <h2 style={{ fontSize: "24px" }}>در حال بارگذاری...</h2>
-      </div>
-    );
+  if (!contact) return <Loader />;
 
   return (
     <>
       {+isEdit === 1 ? (
-        <ContactForm isEdit={true} data={contact} />
+        <div className={styles.editContact}>
+          <div className={styles.editContactInner}>
+            <Link to={`/contacts/${contact.id}`}>
+              <FiArrowRight />
+            </Link>
+            <h2>{contact.fullName}</h2>
+          </div>
+          <ContactForm isEdit={true} data={contact} />
+        </div>
       ) : (
         <div className={styles.contactContainer}>
           <div className={styles.contactAction}>
